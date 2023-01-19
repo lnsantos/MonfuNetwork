@@ -8,22 +8,21 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import com.lnsantos.library.monfunetwork.MonfuNetworkCallAdapterFactory
 import com.lnsantos.library.monfunetwork.model.*
+import com.lnsantos.library.monfunetwork.model.result.MonfuFailed
+import com.lnsantos.library.monfunetwork.model.result.MonfuResult
+import com.lnsantos.library.monfunetwork.model.result.MonfuSuccess
+import com.lnsantos.library.monfunetwork.model.result.MonfuUnknown
 import com.lnsantos.monfunetwork.ui.theme.MonfuNetworkTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -43,7 +42,7 @@ class MainActivity : ComponentActivity() {
     interface CoinmapService {
 
         @GET("api/v1/venues")
-        fun getVenues(): MonfuResult<VenuesDTO>
+        suspend fun getVenues(): MonfuResult<VenuesDTO>
 
     }
 
@@ -66,21 +65,18 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val reference = remember { mutableStateOf("Start") }
-                    val data = api.getVenues()
-                    when (val resultApi = api.getVenues()) {
-                        is MonfuSuccess -> {
-                            reference.value = resultApi.data.list[0].identification.toString()
+                    MainScope().launch(Dispatchers.IO) {
+                        when (val resultApi = api.getVenues()) {
+                            is MonfuSuccess -> {
+                                reference.value = resultApi.data.list[0].identification.toString()
+                            }
+                            is MonfuFailed -> {
+                                reference.value = "Falha com comunicação ${resultApi.errorBody}"
+                            }
+                            is MonfuUnknown -> {
+                                reference.value = resultApi.exception.toString()
+                            }
                         }
-                        is MonfuFailed -> {
-                            reference.value = "Falha com comunicação ${resultApi.errorBody}"
-                        }
-                        is MonfuUnknown -> {
-                            reference.value = resultApi.exception.toString()
-                        }
-                        is MonfuRequestAlreadExecuted -> {
-                            reference.value = "alread request"
-                        }
-
                     }
                     Greeting(reference.value)
                 }

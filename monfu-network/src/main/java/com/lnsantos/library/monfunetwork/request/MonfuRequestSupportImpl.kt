@@ -1,9 +1,9 @@
 package com.lnsantos.library.monfunetwork.request
 
-import com.lnsantos.library.monfunetwork.model.MonfuFailed
-import com.lnsantos.library.monfunetwork.model.MonfuResult
-import com.lnsantos.library.monfunetwork.model.MonfuSuccess
-import com.lnsantos.library.monfunetwork.model.MonfuUnknown
+import com.lnsantos.library.monfunetwork.model.result.MonfuFailed
+import com.lnsantos.library.monfunetwork.model.result.MonfuResult
+import com.lnsantos.library.monfunetwork.model.result.MonfuSuccess
+import com.lnsantos.library.monfunetwork.model.result.MonfuUnknown
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
