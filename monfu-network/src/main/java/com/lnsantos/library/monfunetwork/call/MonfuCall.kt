@@ -5,15 +5,18 @@ import com.lnsantos.library.monfunetwork.model.result.MonfuResult
 import com.lnsantos.library.monfunetwork.model.result.MonfuSuccess
 import com.lnsantos.library.monfunetwork.model.result.MonfuUnknown
 import com.lnsantos.library.monfunetwork.request.MonfuRequestSupport
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.awaitResponse
+import retrofit2.*
 
 internal class MonfuCall<T: Any>(
     private val request: Call<T>
-) : Call<MonfuResult<T>> {
+) : BaseMonfuCall<MonfuResult<T>, T>(request) {
+
+    companion object {
+        private const val GENERIC_ERROR = ""
+    }
 
     override fun enqueue(
         callback: Callback<MonfuResult<T>>
@@ -27,22 +30,18 @@ internal class MonfuCall<T: Any>(
 
     override fun execute(): Response<MonfuResult<T>> = runBlocking {
         try {
-            val response = request.awaitResponse()
+            val request = async(context = Dispatchers.IO){ request.awaitResponse() }
+            val response = request.await()
             val body = response.body()
             val code = response.hashCode()
 
             when (response.isSuccessful && body != null) {
                 true -> Response.success(MonfuSuccess(body))
-                else -> Response.success(MonfuFailed(code, response.toString()))
+                else -> Response.success(MonfuFailed(code, response.errorBody()?.string() ?: GENERIC_ERROR))
             }
         } catch (e: Throwable) {
             Response.success(MonfuUnknown(e))
         }
     }
     override fun clone(): Call<MonfuResult<T>> = MonfuCall(request.clone())
-    override fun isExecuted() = request.isExecuted
-    override fun cancel() = request.cancel()
-    override fun isCanceled() = request.isCanceled
-    override fun request() = request.request()
-    override fun timeout() = request.timeout()
 }
