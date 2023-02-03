@@ -27,12 +27,12 @@ class MonfuNetworkCallAdapterFactory private constructor() : CallAdapter.Factory
         val mainType = getRawType(type)
         val subtype = getParameterUpperBound(FIRST_POSITION, type as ParameterizedType)
 
-        // don't use coroutines
+        // don't use suspend fun (coroutines)
         if (mainType == MonfuResult::class.java) {
             return MonfuNetworkCallAdapter<Any, MonfuResult<Any>>(subtype, MonfuResult::class.java)
         }
 
-        // use coroutines
+        // use suspend fun (coroutines)
         if(mainType != Call::class.java) {
             throw ClassCastException("please use suspend function to continue example suspend fun get(): MonfuResult<String>")
         }

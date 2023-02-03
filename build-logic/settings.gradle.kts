@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.org.bouncycastle.util.Properties
+
 /*
  * Copyright 2022 The Android Open Source Project
  *
@@ -14,14 +16,22 @@
  * limitations under the License.
  */
 
+val properties = java.util.Properties().also { prop ->
+    file("../monfu.properties").also {
+        prop.load(it.inputStream())
+    }
+}
+
+enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
     }
+
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files(properties.getProperty("monfu.catalog.directory")))
         }
     }
 }

@@ -14,5 +14,13 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Monfu Network"
-include ':app'
-include ':monfu-network'
+include ':app', ':monfu-network'
+
+enableFeaturePreview("VERSION_CATALOGS")
+
+/**
+ * Configure to future [TYPESAFE_PROJECT_ACCESSORS]
+ *
+ * enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+ * Doc: https://docs.gradle.org/7.0/release-notes.html
+**/
