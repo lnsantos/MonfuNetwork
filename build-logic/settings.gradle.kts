@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.org.bouncycastle.util.Properties
-
 /*
  * Copyright 2022 The Android Open Source Project
  *
@@ -16,9 +14,20 @@ import org.gradle.internal.impldep.org.bouncycastle.util.Properties
  * limitations under the License.
  */
 
+var quantityTryFind = 3
+var dirs = "../"
+var directoryDefault = "${dirs}monfu.properties"
+
 val properties = java.util.Properties().also { prop ->
-    file("../monfu.properties").also {
-        prop.load(it.inputStream())
+    while (quantityTryFind > 0) {
+        file(directoryDefault).takeIf { it.exists() }?.run {
+            println("> Task:Monfu: search file monfu.prop in round $quantityTryFind")
+            quantityTryFind = -1
+            prop.load(inputStream())
+        }
+
+        quantityTryFind--
+        dirs += dirs
     }
 }
 
