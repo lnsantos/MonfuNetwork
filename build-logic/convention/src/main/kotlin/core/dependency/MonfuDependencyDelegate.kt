@@ -1,6 +1,5 @@
 package core.dependency
 
-import core.monfuLog
 import org.gradle.api.artifacts.VersionCatalog
 
 abstract class MonfuDependencyDelegate : MonfuDependencyHandler<String> {

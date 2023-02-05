@@ -4,11 +4,19 @@ import com.android.build.api.dsl.CompileOptions
 import com.android.build.api.dsl.DefaultConfig
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import com.android.build.gradle.LibraryExtension
-import core.plugin.settings.MonfuPluginSetting.Companion.getExtensionAwareScope
+import core.MonfuContext
 
 abstract class MonfuPluginSettingDelegate : MonfuPluginSetting {
 
     abstract val common: LibraryExtension
+
+    override var compileSdk: Int?
+        get() = common.compileSdk
+        set(value) { value?.also { setCompileSDK(it) } }
+
+    override var packagename: String?
+        get() = common.namespace
+        set(value) { value?.also { setNamespace(it) } }
 
     override fun setNamespace(reference: String) {
         common.namespace = reference
@@ -35,6 +43,6 @@ abstract class MonfuPluginSettingDelegate : MonfuPluginSetting {
     }
 
     override fun onKotlinOptions(options: KotlinJvmOptions.() -> Unit) {
-        common.getExtensionAwareScope("kotlinOptions", options)
+        common.getExtensionAwareScope(MonfuContext.REFERENCE_KOTLIN_OPTIONS, options)
     }
 }

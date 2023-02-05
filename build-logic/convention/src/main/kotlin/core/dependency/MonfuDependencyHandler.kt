@@ -1,5 +1,7 @@
 package core.dependency
 
-interface MonfuDependencyHandler<T> {
+import core.MonfuContext
+
+interface MonfuDependencyHandler<T> : MonfuContext {
     fun applyLibrary(library: T) : Any
 }

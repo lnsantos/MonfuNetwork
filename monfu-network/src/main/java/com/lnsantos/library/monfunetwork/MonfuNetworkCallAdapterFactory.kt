@@ -1,5 +1,6 @@
 package com.lnsantos.library.monfunetwork
 
+import android.content.Context
 import com.lnsantos.library.monfunetwork.exception.MonfuOperationNotSupported
 import com.lnsantos.library.monfunetwork.model.result.MonfuResult
 import kotlinx.coroutines.flow.Flow

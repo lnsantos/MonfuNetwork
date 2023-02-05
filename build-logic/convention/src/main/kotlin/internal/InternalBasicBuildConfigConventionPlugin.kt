@@ -10,7 +10,11 @@ class InternalBasicBuildConfigConventionPlugin : Plugin<Project>{
         monfuSettings {
             setCompileSDK(32)
             setTargetSdk(32)
-            onDefaultConfig { minSdk = 21 }
+            onDefaultConfig {
+                minSdk = 21
+                testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                setProguardFiles(listOf("consumer-rules.pro"))
+            }
             onCompileOptions {
                 sourceCompatibility = JavaVersion.VERSION_1_8
                 targetCompatibility = JavaVersion.VERSION_1_8

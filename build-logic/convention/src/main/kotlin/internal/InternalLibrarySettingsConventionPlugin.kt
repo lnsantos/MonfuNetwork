@@ -2,8 +2,6 @@ package internal
 
 import core.monfuDependencies
 import core.monfuPlugins
-import core.monfuSettings
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

@@ -4,11 +4,6 @@ plugins {
 
 android {
     namespace 'com.lnsantos.library.monfunetwork'
-    defaultConfig {
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
     buildTypes {
         release {
             minifyEnabled false

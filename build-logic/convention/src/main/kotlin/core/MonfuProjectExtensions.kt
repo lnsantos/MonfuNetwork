@@ -1,15 +1,23 @@
 package core
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
+import com.android.build.gradle.LibraryExtension
 import core.dependency.MonfuDependencyHandlerScope
 import core.plugin.MonfuPluginManagerScope
-import core.plugin.settings.MonfuPluginSetting.Companion.getLibrary
 import core.plugin.settings.MonfuPluginSettingScope
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.configure
+fun Project.getLibrary(
+    onLibraryExtension : LibraryExtension.() -> Unit
+) = extensions.configure<LibraryExtension> {
+    onLibraryExtension(this)
+}
+
+fun Project.getAndroid() = this as CommonExtension<*, *, *, *>
 
 internal fun Project.getApplication() = run {
     var instance: ApplicationExtension? = null
