@@ -18,5 +18,9 @@ gradlePlugin {
             id = "monfu.internal.default.library"
             implementationClass = "internal.InternalLibrarySettingsConventionPlugin"
         }
+        register("internalBasicBuildConfigConventionPlugin") {
+            id = "monfu.internal.default.build"
+            implementationClass = "internal.InternalBasicBuildConfigConventionPlugin"
+        }
     }
 }

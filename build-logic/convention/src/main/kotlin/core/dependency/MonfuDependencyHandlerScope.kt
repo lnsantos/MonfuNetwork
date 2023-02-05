@@ -13,4 +13,8 @@ open class MonfuDependencyHandlerScope(
     fun catalogImplementation(reference: String) {
         handlerScope.add("implementation", applyLibrary(reference))
     }
+
+    fun catalogTestImplementation(reference: String) {
+        handlerScope.add("testImplementation", applyLibrary(reference))
+    }
 }

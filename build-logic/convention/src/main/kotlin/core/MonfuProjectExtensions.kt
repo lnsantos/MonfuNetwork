@@ -1,17 +1,31 @@
 package core
 
+import com.android.build.api.dsl.ApplicationExtension
 import core.dependency.MonfuDependencyHandlerScope
 import core.plugin.MonfuPluginManagerScope
+import core.plugin.settings.MonfuPluginSetting.Companion.getLibrary
+import core.plugin.settings.MonfuPluginSettingScope
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.configure
 
+internal fun Project.getApplication() = run {
+    var instance: ApplicationExtension? = null
+    extensions.configure<ApplicationExtension> {
+        instance = this
+    }
+    instance!!
+}
+internal fun Project.getCatalog() = extensions.getByType<VersionCatalogsExtension>().named("libs")
 internal fun Project.monfuDependencies(configuration: MonfuDependencyHandlerScope.() -> Unit) {
-    val catalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
-    dependencies { configuration(MonfuDependencyHandlerScope(this, catalog)) }
+    dependencies { configuration(MonfuDependencyHandlerScope(this, getCatalog())) }
 }
 
 internal fun Project.monfuPlugins(onPlugin: MonfuPluginManagerScope.() -> Unit) {
     onPlugin(MonfuPluginManagerScope(pluginManager))
+}
+internal fun Project.monfuSettings(scope: MonfuPluginSettingScope.() -> Unit) {
+    getLibrary { scope(MonfuPluginSettingScope(this)) }
 }
