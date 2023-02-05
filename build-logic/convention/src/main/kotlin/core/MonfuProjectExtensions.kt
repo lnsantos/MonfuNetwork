@@ -11,13 +11,13 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.configure
-fun Project.getLibrary(
+internal fun Project.getLibrary(
     onLibraryExtension : LibraryExtension.() -> Unit
 ) = extensions.configure<LibraryExtension> {
     onLibraryExtension(this)
 }
 
-fun Project.getAndroid() = this as CommonExtension<*, *, *, *>
+internal fun Project.getAndroid() = this as CommonExtension<*, *, *, *>
 
 internal fun Project.getApplication() = run {
     var instance: ApplicationExtension? = null
@@ -27,13 +27,13 @@ internal fun Project.getApplication() = run {
     instance!!
 }
 internal fun Project.getCatalog() = extensions.getByType<VersionCatalogsExtension>().named("libs")
-internal fun Project.monfuDependencies(configuration: MonfuDependencyHandlerScope.() -> Unit) {
+fun Project.monfuDependencies(configuration: MonfuDependencyHandlerScope.() -> Unit) {
     dependencies { configuration(MonfuDependencyHandlerScope(this, getCatalog())) }
 }
 
-internal fun Project.monfuPlugins(onPlugin: MonfuPluginManagerScope.() -> Unit) {
+fun Project.monfuPlugins(onPlugin: MonfuPluginManagerScope.() -> Unit) {
     onPlugin(MonfuPluginManagerScope(pluginManager))
 }
-internal fun Project.monfuSettings(scope: MonfuPluginSettingScope.() -> Unit) {
+fun Project.monfuSettings(scope: MonfuPluginSettingScope.() -> Unit) {
     getLibrary { scope(MonfuPluginSettingScope(this)) }
 }

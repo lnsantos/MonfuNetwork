@@ -1,14 +1,34 @@
 package core.dependency
 
-import org.gradle.api.artifacts.VersionCatalog
+import core.MonfuContext.Companion.DEPENDENCY_ANDROID_TEST_IMPLEMENTATION
+import core.MonfuContext.Companion.DEPENDENCY_IMPLEMENTATION
+import core.MonfuContext.Companion.DEPENDENCY_KAPT
+import core.MonfuContext.Companion.DEPENDENCY_KAPT_ANDROID_TEST
+import core.MonfuContext.Companion.DEPENDENCY_TEST_IMPLEMENTATION
+import org.gradle.kotlin.dsl.DependencyHandlerScope
 
-abstract class MonfuDependencyDelegate : MonfuDependencyHandler<String> {
+abstract class MonfuDependencyDelegate : MonfuDependencyHandler<Any> {
 
-    abstract val versionCatalog: VersionCatalog
+    abstract val handlerScope: DependencyHandlerScope
 
-    override fun applyLibrary(library: String) : Any {
-        return versionCatalog.findLibrary(library).get().also {
-            monfuLog("library find is ${it.get()}")
-        }
+    override fun implementation(reference: Any) {
+        handlerScope.add(DEPENDENCY_IMPLEMENTATION, reference)
+    }
+
+    override fun testImplementation(reference: Any) {
+        handlerScope.add(DEPENDENCY_TEST_IMPLEMENTATION, reference)
+    }
+
+    override fun kapt(reference: Any) {
+        handlerScope.add(DEPENDENCY_KAPT, reference)
+    }
+
+    override fun kaptAndroidTest(reference: Any) {
+        handlerScope.add(DEPENDENCY_KAPT_ANDROID_TEST, reference)
+    }
+
+    override fun androidTestImplementation(reference: Any) {
+        handlerScope.add(DEPENDENCY_ANDROID_TEST_IMPLEMENTATION, reference)
     }
 }
+

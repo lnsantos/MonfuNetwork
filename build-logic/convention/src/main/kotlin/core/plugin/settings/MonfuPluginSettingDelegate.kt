@@ -2,9 +2,16 @@ package core.plugin.settings
 
 import com.android.build.api.dsl.CompileOptions
 import com.android.build.api.dsl.DefaultConfig
+import com.android.build.gradle.internal.dsl.DefaultConfig as InternalDefaultConfig
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.api.AndroidSourceSet
+import com.android.build.gradle.api.LibraryVariant
+import com.android.build.gradle.internal.dsl.BuildType
+import com.android.build.gradle.internal.dsl.ProductFlavor
 import core.MonfuContext
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.internal.DefaultDomainObjectSet
 
 abstract class MonfuPluginSettingDelegate : MonfuPluginSetting {
 
@@ -12,11 +19,30 @@ abstract class MonfuPluginSettingDelegate : MonfuPluginSetting {
 
     override var compileSdk: Int?
         get() = common.compileSdk
-        set(value) { value?.also { setCompileSDK(it) } }
+        set(value) {
+            value?.also { setCompileSDK(it) }
+        }
 
     override var packagename: String?
         get() = common.namespace
-        set(value) { value?.also { setNamespace(it) } }
+        set(value) {
+            value?.also { setNamespace(it) }
+        }
+
+    override val libraryVariants: DefaultDomainObjectSet<LibraryVariant>
+        get() = common.libraryVariants
+
+    override val buildTypes: NamedDomainObjectContainer<BuildType>
+        get() = common.buildTypes
+
+    override val defaultConfig: InternalDefaultConfig
+        get() = common.defaultConfig
+
+    override val productFlavors: NamedDomainObjectContainer<ProductFlavor>
+        get() = common.productFlavors
+
+    override val sourceSets: NamedDomainObjectContainer<AndroidSourceSet>
+        get() = common.sourceSets
 
     override fun setNamespace(reference: String) {
         common.namespace = reference
@@ -39,10 +65,14 @@ abstract class MonfuPluginSettingDelegate : MonfuPluginSetting {
     }
 
     override fun onAndroidDefaultConfig(config: AndroidDefaultConfig.() -> Unit) {
-       config(common.defaultConfig)
+        config(common.defaultConfig)
     }
 
     override fun onKotlinOptions(options: KotlinJvmOptions.() -> Unit) {
         common.getExtensionAwareScope(MonfuContext.REFERENCE_KOTLIN_OPTIONS, options)
+    }
+
+    override fun onLibraryExtension(context: LibraryExtension.() -> Unit) {
+        context(common)
     }
 }
