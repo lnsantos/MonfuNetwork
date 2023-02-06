@@ -10,6 +10,7 @@ java {
 dependencies {
     compileOnly(libs.gradle.android.plugin)
     compileOnly(libs.gradle.kotlin.plugin)
+    compileOnly(gradleApi())
 }
 
 gradlePlugin {
@@ -21,6 +22,10 @@ gradlePlugin {
         register("internalBasicBuildConfigConventionPlugin") {
             id = "monfu.internal.default.build"
             implementationClass = "internal.InternalBasicBuildConfigConventionPlugin"
+        }
+        register("libraryPublishingMonfuNetwork") {
+            id = "monfu.publish.monfunetwork"
+            implementationClass = "library.LibraryPublishingMonfuNetwork"
         }
     }
 }
