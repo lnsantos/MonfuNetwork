@@ -1,17 +1,17 @@
 package library
 
 import core.monfuPlugins
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.kotlin.dsl.create
-import org.gradle.plugins.signing.SigningExtension
-import java.net.URI
-import org.gradle.api.Action
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.plugins.signing.SigningExtension
+import java.util.*
 
 class LibraryPublishingMonfuNetwork : Plugin<Project> {
 
@@ -21,13 +21,20 @@ class LibraryPublishingMonfuNetwork : Plugin<Project> {
             applyPlugin("signing")
         }
 
+        val properties = Properties()
+        val gradleDirectory = target.gradle.gradleUserHomeDir.path
+        properties.load(target.file("$gradleDirectory/gradle.properties").inputStream())
+
         target.publishing {
+
             publications {
                 create<MavenPublication>("libraryMavenNetwork") {
                     groupId = "io.github.lnsantos"
                     artifactId = "monfu-network"
-                    version = "0.0.1-alpha"
-                    from(target.components.find { it.name == "java" })
+                    version = "0.0.3-alpha"
+
+                    val directory = "${target.buildDir.path}/outputs/aar/${target.project.name}-release.aar"
+                    artifact(directory.also { println("directory find is $it") })
 
                     pom {
                         name.set("Monfu Network")
@@ -44,15 +51,15 @@ class LibraryPublishingMonfuNetwork : Plugin<Project> {
 
                         developers {
                             developer {
-                                id.set(System.getenv("publish_sonatype_id"))
-                                name.set(System.getenv("publish_sonatype_name"))
-                                email.set(System.getenv("publish_sonatype_email"))
+                                id.set(System.getenv("abd") ?: properties.getProperty("publish_sonatype_login"))
+                                name.set(System.getenv("publish_sonatype_name") ?: properties.getProperty("publish_sonatype_name"))
+                                email.set(System.getenv("publish_sonatype_email") ?: properties.getProperty("publish_sonatype_email"))
                             }
                         }
                         scm {
                             connection.set("scm:git:git:github.com/lnsantos/MonfuNetwork.git")
                             developerConnection.set("cm:git:ssh://github.com/lnsantos/MonfuNetwork.git")
-                            url.set("https://github.com/lnsantos/MonfuNetwork\"")
+                            url.set("https://github.com/lnsantos/MonfuNetwork")
                         }
                     }
                 }
@@ -62,8 +69,10 @@ class LibraryPublishingMonfuNetwork : Plugin<Project> {
                         name = "OSSRH"
                         setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                         credentials {
-                            username = System.getenv("publish_sonatype_login")
-                            password = System.getenv("publish_sonatype_pass")
+                            val username: String = System.getenv("publish_sonatype_login") ?: properties.getProperty("publish_sonatype_login")
+                            val pass: String = System.getenv("publish_sonatype_pass") ?: properties.getProperty("publish_sonatype_pass")
+                            setUsername(username)
+                            setPassword(pass)
                         }
                     }
                 }
@@ -76,17 +85,6 @@ class LibraryPublishingMonfuNetwork : Plugin<Project> {
             useGpgCmd()
             sign(publishing.publications)
         }
-
-        // target.signInConfigureMavenPublication("libraryMavenNetwork")
-        /* target.signin {
-            (target as org.gradle.api.plugins.ExtensionAware).extensions.configure<PublishingExtension> {
-                sign(publications.getByName("libraryMavenNetwork"))
-            }
-        } */
-        /*
-        with(target as SigningExtension) {
-            sign((target as PublishingExtension).publications.getByName("libraryMavenNetwork"))
-        }*/
     }
 
 
@@ -95,8 +93,4 @@ class LibraryPublishingMonfuNetwork : Plugin<Project> {
     }
 
     private fun Project.publishing(configure: Action<PublishingExtension>): Unit = getExtensions("publishing", configure)
-    private fun Project.signin(configure: Action<SigningExtension>): Unit = getExtensions("signing", configure)
-    private fun Project.signInConfigureMavenPublication(reference: String) {
-        publishing { signin { sign(publications.getByName(reference)) } }
-    }
 }
