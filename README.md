@@ -5,6 +5,7 @@ Monfu Network
 
 ### Última versão
 Essa é uma versão experimental, novas atualizações viram em breve.
+
 `io.github.lnsantos:monfu-network:0.0.3-alpha  `
 
 ### Como utilizar
