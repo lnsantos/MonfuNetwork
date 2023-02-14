@@ -66,7 +66,7 @@ dependencies {
     implementation(libs.core.retrofit.library)
     implementation(libs.core.retrofit.gson)
 
-    implementation("io.github.lnsantos:monfu-network:0.0.3-alpha")
+    implementation(project(":monfu-network"))
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

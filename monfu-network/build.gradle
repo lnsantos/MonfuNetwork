@@ -6,7 +6,6 @@ plugins {
 android {
     namespace 'com.lnsantos.library.monfunetwork'
     buildTypes {
-        components
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

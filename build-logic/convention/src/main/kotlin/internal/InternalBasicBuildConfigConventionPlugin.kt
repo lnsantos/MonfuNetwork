@@ -1,23 +1,23 @@
 package internal
 
-import core.monfuSettings
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import top.softnepo.public.easyLogicBuild
 
 class InternalBasicBuildConfigConventionPlugin : Plugin<Project>{
-    override fun apply(target: Project) = target.monfuSettings {
-        setCompileSDK(32)
-        setTargetSdk(32)
-        onDefaultConfig {
-            minSdk = 21
-            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-            setProguardFiles(listOf("consumer-rules.pro"))
+    override fun apply(target: Project) = target.easyLogicBuild {
+        this@easyLogicBuild.compileSdk = 32
+        this@easyLogicBuild.targetSdk = 32
+        this@easyLogicBuild.onDefaultConfig {
+            this@onDefaultConfig.minSdk = 21
+            this@onDefaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            this@onDefaultConfig.setProguardFiles(listOf("consumer-rules.pro"))
         }
-        onCompileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+        this@easyLogicBuild.onCompileOptions {
+            this@onCompileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
+            this@onCompileOptions.targetCompatibility = JavaVersion.VERSION_1_8
         }
-        onKotlinOptions { jvmTarget = "1.8" }
+        this@easyLogicBuild.onKotlinOptions { jvmTarget = "1.8" }
     }
 }
