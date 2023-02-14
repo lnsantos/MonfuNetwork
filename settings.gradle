@@ -5,6 +5,7 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url = "https://s01.oss.sonatype.org/content/repositories/topsoftnepo-1005" }
     }
 }
 dependencyResolutionManagement {
@@ -13,6 +14,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url = "https://s01.oss.sonatype.org/content/repositories/topsoftnepo-1005" }
     }
 }
 rootProject.name = "Monfu Network"

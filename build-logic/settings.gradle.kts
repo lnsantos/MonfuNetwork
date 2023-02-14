@@ -13,36 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-var quantityTryFind = 3
-var dirs = "../"
-var directoryDefault = "${dirs}monfu.properties"
-
-val properties = java.util.Properties().also { prop ->
-    while (quantityTryFind > 0) {
-        file(directoryDefault).takeIf { it.exists() }?.run {
-            println("> Task:Monfu: search file monfu.prop in round $quantityTryFind")
-            quantityTryFind = -1
-            prop.load(inputStream())
-        }
-
-        quantityTryFind--
-        dirs += dirs
-    }
-}
+import java.net.URI
 
 enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = URI("https://s01.oss.sonatype.org/content/repositories/topsoftnepo-1005") }
     }
 
-    versionCatalogs {
-        create("libs") {
-            from(files(properties.getProperty("monfu.catalog.directory")))
-        }
-    }
+    versionCatalogs.create("libs") { from(files("../gradle/libs.versions.toml")) }
 }
 
 rootProject.name = "build-logic"

@@ -1,6 +1,5 @@
 package library
 
-import core.monfuPlugins
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -11,12 +10,13 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.plugins.signing.SigningExtension
+import top.softnepo.public.easyLogicPlugins
 import java.util.*
 
 class LibraryPublishingMonfuNetwork : Plugin<Project> {
 
     override fun apply(target: Project) {
-        target.monfuPlugins {
+        target.easyLogicPlugins {
             applyPlugin("maven-publish")
             applyPlugin("signing")
         }
